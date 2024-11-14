@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Incomes
+{% endblock %}
+
+{% block main %}
+    <h1> Incomes </h1>
+    <div class="table-wrapper">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Tag</th>
+                    <th>Date</th>
+                    <th>Notes</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for income in incomes %}
+                    <tr>
+                        <td>{{ income.name }}</td>
+                        <td>{{ income.tag }}</td>
+                        <td>{{ income.date }}</td>
+                        <td>{{ income.notes }}</td>
+                        <td>${{ "%.2f"|format(income.value | float) }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="income-summary">
+            <p class="total-income-label">Total Income</p>
+            <div class="information-box">
+                <p>{{ total_income }}</p>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-primary" type="button" id="addIncomeButton">Add Income</button>
+    <button class="btn btn-primary" type="button" id="removeIncomeButton">Remove Income</button>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Button Remove Income
+        document.getElementById("removeIncomeButton").addEventListener("click", function(){
+            window.location.href = "/remove_income";
+        });
+
+        // Button Add Income
+        document.getElementById("addIncomeButton").addEventListener("click", function(){
+            window.location.href = "/add_income";
+        });
+    });
+</script>
+    </script>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Finance Overview
+{% endblock %}
+
+{% block main %}
+    <h1> Finance Overview </h1>
+    <div class="table-wrapper">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Name</th>
+                    <th>Tag</th>
+                    <th>Date</th>
+                    <th>Notes</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for income in incomes %}
+                    <tr>
+                        <td>{{ income.type | upper }}</td>
+                        <td>{{ income.name }}</td>
+                        <td>{{ income.tag }}</td>
+                        <td>{{ income.date }}</td>
+                        <td>{{ income.notes }}</td>
+                        <td style="color: #68C808;">${{ "%.2f"|format(income.value | float) }}</td>
+                    </tr>
+                {% endfor %}
+
+                {% for expense in expenses %}
+                <tr>
+                    <td>{{ expense.type | upper }}</td>
+                    <td>{{ expense.name }}</td>
+                    <td>{{ expense.tag }}</td>
+                    <td>{{ expense.date }}</td>
+                    <td>{{ expense.notes }}</td>
+                    <td style="color: #FF0000;">${{ "%.2f"|format(expense.value | float) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="income-summary">
+            <p class="total-income-label">Income Still Available</p>
+            <div class="information-box">
+                <p style="color: {% if income_still_available.replace('$', '')|float < 0 %}#FF0000{% else %}#68C808{% endif %};">
+                    {{ income_still_available }}
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

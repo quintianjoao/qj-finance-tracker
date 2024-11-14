@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Remove Expense
+{% endblock %}
+
+{% block main %}
+    <h1> Remove Expense </h1>
+    <div class="form-box">
+        <form id="removeExpenseForm" action="{{ url_for('remove_expense') }}" method="post">
+            <select class="form-control mx-auto w-auto" id="expense_name" name="expense_name">
+                <option value="" disabled selected>Expense Name</option> <!-- Placeholder option -->
+                {% for expense in expenses %}
+                    <option value="{{ expense.name }}">{{ expense.name }}</option> <!-- Options from existing expenses -->
+                {% endfor %}
+            </select>
+            <button class="btn btn-primary mt-3" id="remove-expense-button" type="submit">Remove Expense</button>
+        </form>
+    </div>
+{% endblock %}

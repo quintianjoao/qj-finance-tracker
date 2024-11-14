@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Add Expense
+{% endblock %}
+
+{% block main %}
+    <h1> Add Expense </h1>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6-beta.29/jquery.inputmask.min.js"></script>
+
+        <body>
+            <div class="form-box">
+                <form id="expenseForm" action="{{ url_for('add_expense') }}" method="post">
+                    <label for="expense_name">Expense Name</label>
+                    <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="expense_name" name="expense_name" placeholder="Expense Name" type="text">
+                    <label for="Expense">Expense Tag</label>
+                    <input autocomplete="off" autofocus="off" class="form-control mx-auto w-auto" id="expense_tag" name="expense_tag" placeholder="Expense Tag" type="text">
+                    <label for="expense_value">Expense Value</label>
+                    <input autocomplete="off" autofocus="off" class="form-control mx-auto w-auto" id="expense_value" name="expense_value" placeholder="Expense Value" type="number" step="0.01" min="1" required>
+                        <script>
+                        document.getElementById('expense_value').addEventListener('blur', function(event) {
+                            let value = parseFloat(event.target.value);
+                            if (!isNaN(value)) {
+                                event.target.value = value.toFixed(2);
+                            }
+                        });
+                        </script>
+                    <label for="expense_date">Expense Date</label>
+                    <input autocomplete="off" autofocus="off" class="form-control mx-auto w-auto" id="expense_date" name="expense_date" placeholder="Expense Date" type="date">
+                    <label for="expense_notes">Expense Notes</label>
+                    <input autocomplete="off" autofocus="off" class="form-control mx-auto w-auto" id="expense_notes" name="expense_notes" placeholder="Notes" type="text">
+                    <button class="btn btn-primary mt-3" class="form-control mx-auto w-auto" id="add-expense-button" type="submit">Add Expense</button>
+                </form>
+            </div>
+        </body>
+{% endblock %}

@@ -1,0 +1,151 @@
+.navbar {
+    background-color: #14401D !important;
+    border-color: #000000;
+}
+.navbar-brand, .nav-link {
+    color: #FF9D00;
+}
+.navbar-brand:hover, .nav-link:hover {
+    color: #FF9D00;
+}
+
+body {
+    color: #14401D;
+    font-family: 'Inknut Antiqua', sans-serif;
+}
+
+    /* Input fields */
+.form-control {
+    border: 2px solid #14401D;
+    background-color: #FFFFFF;
+    color: #14401D;
+    font-family: 'Inknut Antiqua', sans-serif;
+}
+
+/* Input fields on focus */
+.form-control:focus {
+    border-color: #FF9D00;
+    background-color: #FFFFFF;
+}
+
+/* Button */
+.btn-primary {
+    background-color: #14401D;
+    border: 1px solid #FF9D00; /* border color */
+    color: #FF9D00;
+    font-family: 'Inknut Antiqua', sans-serif;
+}
+
+/* Button on hover */
+.btn-primary:hover {
+    background-color: #FF9D00;
+    border-color: #FF9D00;
+    color: #14401D;
+}
+
+.login-box {
+    border: 2px solid #FF9D00;
+    padding: 20px;
+    margin: 0 auto;
+    width: 300px;
+    background-color: #14401D;
+    text-align: center;
+    font-family: 'Inknut Antiqua', sans-serif;
+}
+
+.login-box h2 {
+    margin-bottom: 20px;
+    color: #14401D;
+}
+
+label {
+    color: #FF9D00;
+    font-family: 'Inknut Antiqua', sans-serif;
+}
+
+.register-box {
+    border: 2px solid #FF9D00;
+    padding: 20px;
+    margin: 0 auto;
+    width: 300px;
+    background-color: #14401D;
+    text-align: center;
+    font-family: 'Inknut Antiqua', sans-serif;
+}
+
+.register-box h2 {
+    margin-bottom: 20px;
+    color: #14401D;
+}
+
+.income-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.total-income-label {
+    color: #000000;
+    font-family: 'Inknut Antiqua', sans-serif;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.information-box {
+    border: 1px solid #000000;
+    padding: 0px;
+    width: 100px;
+    background-color: #FFFFFF;
+    color: #68C808;
+    font-family: 'Inknut Antiqua', sans-serif;
+    display:flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.information-box p {
+    margin: 0; /* Remove margem do <p> */
+}
+
+/* Alinhar total-income-label e information-box abaixo da tabela */
+.table-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 20px;
+}
+
+
+.total-expense-label {
+    color: #000000;
+    font-family: 'Inknut Antiqua', sans-serif;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.expense-information-box {
+    border: 1px solid #000000;
+    padding: 0px;
+    width: 100px;
+    background-color: #FFFFFF;
+    color: #FF0000;
+    font-family: 'Inknut Antiqua', sans-serif;
+    display:flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.expense-information-box p {
+    margin: 0; /* Remove margem do <p> */
+}
+
+.red-text {
+    color: #FF0000;
+}
+
+.green-text {
+    color: #68C808;
+}
