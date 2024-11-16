@@ -14,5 +14,5 @@ This project is a **Personal Finance Tracker** application built with **Flask** 
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/quintianjoao/qjpft.git
+   git clone https://github.com/quintianjoao/qj-finance-tracker.git
    cd qjpft
