@@ -4,13 +4,29 @@ from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required, usd
 from sqlalchemy import text
+import logging
+from decouple import config
+from email_validator import validate_email, EmailNotValidError
+from flask_migrate import Migrate
+
+
+logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 
-# SQLite
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:/Users/João Vitor Quintian/qjpft/personal_finance_tracker.db'
+
+# SQL manipulation
+app.config['SQLALCHEMY_DATABASE_URI'] = config("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+try:
+    db = SQLAlchemy(app)
+except Exception as e:
+    logging.error("Error connecting to the database: %s", e)
+    raise  # Catch db conection error and stop the app
+
+
+migrate= Migrate(app, db)
 
 # Custom filter
 app.jinja_env.filters["usd"] = usd
@@ -20,8 +36,6 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# SQLAlchemy
-db = SQLAlchemy(app)
 
 # Ensure responses aren't cached
 @app.after_request
@@ -42,8 +56,10 @@ def index():
         {"user_id": session["user_id"]}
     ).mappings().all()
 
-     # Calculate total income earned
-    total_income_query = db.session.execute(text("SELECT SUM(value) FROM finances WHERE type='income'")).fetchone()
+    # Calculate total income earned
+    total_income_query = db.session.execute(text("SELECT SUM(value) FROM finances WHERE user_id = :user_id AND type='income'"),
+        {"user_id": session["user_id"]}
+    ).fetchone()
     total_income = total_income_query[0] if total_income_query[0] else 0
     
     
@@ -54,7 +70,10 @@ def index():
     ).mappings().all() 
 
     # Calculate total expenses
-    total_expense_query = db.session.execute(text("SELECT SUM(value) FROM finances WHERE type='expense'")).fetchone()
+    total_expense_query = db.session.execute(
+        text("SELECT SUM(value) FROM finances WHERE user_id = :user_id AND type='expense'"),
+        {"user_id": session["user_id"]}
+    ).fetchone()
     total_expenses = total_expense_query[0] if total_expense_query[0] else 0
 
 
@@ -80,7 +99,9 @@ def incomes():
     ).mappings().all()
     
     # Calculate total income earned
-    total_income_query = db.session.execute(text("SELECT SUM(value) FROM finances WHERE type='income'")).fetchone()
+    total_income_query = db.session.execute(text("SELECT SUM(value) FROM finances WHERE user_id = :user_id AND type='income'"),
+        {"user_id": session["user_id"]}
+    ).fetchone()
     total_income = total_income_query[0] if total_income_query[0] else 0
     
     # Turn total_income into dollars
@@ -280,9 +301,9 @@ def login():
 
     # User reached route via POST
     if request.method == "POST":
-        # Check for username
+        # Check for username or email
         if not request.form.get("username"):
-            return apology("must provide username", 403)
+            return apology("must provide username or email", 403)
         
         # Check for password
         elif not request.form.get("password"):
@@ -290,8 +311,8 @@ def login():
         
         # Query to retrieve the user data
         rows = db.session.execute(
-            text("SELECT id, hash FROM users WHERE username = :username"),
-            {"username": request.form.get("username")}
+            text("SELECT id, hash FROM users WHERE username = :username OR email = :email"),
+            {"username": request.form.get("username"), "email": request.form.get("username")}
         ).mappings().all()
 
         # Ensure username exists and password is correct
@@ -321,24 +342,41 @@ def register():
 
         elif not request.form.get("password"):
             return apology("must provide password", 400)
+        
+        elif not request.form.get("email"):
+            return apology("must provide email", 400)
+        
+        elif request.form.get("confirm-email") != request.form.get("email"):
+            return apology("emails do not match", 400)
 
         elif request.form.get("password") != request.form.get("confirmation"):
             return apology("Passwords do not match", 400)
+        
+        # Catch incorrect user input for email
+        try:
+            email = request.form.get("email")
+            validate_email(email)
+        except EmailNotValidError as e:
+            return apology(str(e), 400)
 
 
-        # Query to check if username exists
+        # Query db to check if username or email exists
         rows = db.session.execute(
-            text("SELECT * FROM users WHERE username = :username"), {"username": request.form.get("username")}).mappings().all()
-        session["user_id"] = rows[0]["id"]
+            text("SELECT id FROM users WHERE username = :username OR email = :email"),
+            {"username": request.form.get("username"), "email": request.form.get("email")}
+        ).mappings().all()
 
         if rows:
-            return apology("username already exists", 400)
+            return apology("Username or email already exists", 400)
+
+
 
         # Insert new user
         db.session.execute(
-            text("INSERT INTO users (username, hash) VALUES (:username, :hash)"),
+            text("INSERT INTO users (username, email, hash) VALUES (:username, :email, :hash)"),
             {
                 "username": request.form.get("username"),
+                "email": request.form.get("email"),
                 "hash": generate_password_hash(request.form.get("password"))
             }
         )
@@ -348,7 +386,7 @@ def register():
         rows = db.session.execute(
             text("SELECT * FROM users WHERE username = :username"),
             {"username": request.form.get("username")}
-        ).fetchall()
+        ).mappings().all()
         
         session["user_id"] = rows[0]["id"]
 

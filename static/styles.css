@@ -106,7 +106,7 @@ label {
 }
 
 .information-box p {
-    margin: 0; /* Remove margem do <p> */
+    margin: 0; /* Removes margin from <p> */
 }
 
 /* Alinhar total-income-label e information-box abaixo da tabela */
@@ -139,7 +139,7 @@ label {
 }
 
 .expense-information-box p {
-    margin: 0; /* Remove margem do <p> */
+    margin: 0; /* Removes margin from <p> */
 }
 
 .red-text {
@@ -148,4 +148,10 @@ label {
 
 .green-text {
     color: #68C808;
+}
+
+
+/* Creates a separation bt the button and the last form field */
+.btn-primary {
+    margin: 20px;
 }
